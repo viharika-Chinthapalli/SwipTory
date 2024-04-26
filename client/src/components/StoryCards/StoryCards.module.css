@@ -1,0 +1,15 @@
+.container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); 
+  gap: 20px;
+}
+
+.heading{
+  text-align: center;
+}
+
+.para{
+  text-align: center;
+  margin: 5rem 0 10rem 0;
+  color: #8E8E8E;
+}

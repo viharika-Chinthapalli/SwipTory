@@ -1,0 +1,57 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20% 20% 10% 20%;
+  background-color: white;
+  border-radius: 10px;
+  position: relative;
+}
+
+.modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 25vw;
+}
+
+.input {
+  padding: 5px;
+  width: 50%;
+}
+
+.inputs{
+  display: flex;
+  width: 25vw;
+  align-items: center;
+  justify-content: space-between;
+  margin: 1rem;
+}
+
+.label {
+  display: block;
+  text-align: left;
+}
+
+.closeButton {
+  color: red;
+  border: 2px solid red; 
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  font-size: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  position: absolute;
+  top: 15%;
+  right: 15%;
+}
+
+.error{
+  color: red;
+  font-size: 0.7rem;
+  font-weight: bolder;
+}
+

@@ -1,0 +1,21 @@
+.topNav {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.topNav button {
+  background-color: transparent;
+  border: none;
+  padding: 10px 20px;
+  margin: 0 10px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.topNav button:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Add more styles as needed */
