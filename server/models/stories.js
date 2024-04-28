@@ -14,17 +14,13 @@ const storySchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    likeCount: {
+      type: Number,
+      default: 0,
+    },
     type: {
       type: String,
       required: true,
-    },
-    bookmark: {
-      type: Boolean,
-      default: false, // Default value is false
-    },
-    like: {
-      type: Boolean,
-      default: false, // Default value is false
     },
   },
   { timestamps: { createdAt: "createdAt", updatedAt: "updatedAt" } }

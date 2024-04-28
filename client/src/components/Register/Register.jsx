@@ -36,6 +36,7 @@ const Register = ({ setShowRegister }) => {
     // Send POST request to the backend using Axios
     axios.post("http://localhost:8000/api/v1/auth/register", userData)
       .then(response => {
+        localStorage.setItem("token", response.data.token);
         toast.success("Registration successful!");
         setUsername("");
         setPassword("");

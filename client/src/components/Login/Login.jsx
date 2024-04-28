@@ -3,7 +3,7 @@ import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import styles from "../Register/Register.module.css";
-import Button from '../Button/Button';
+import Button from "../Button/Button";
 
 const Login = ({ setShowLogin }) => {
   const [username, setUsername] = useState("");
@@ -27,7 +27,7 @@ const Login = ({ setShowLogin }) => {
       setError("Please enter valid username");
       return;
     }
-  
+
     axios
       .post("http://localhost:8000/api/v1/auth/login", {
         username: username,
@@ -35,20 +35,44 @@ const Login = ({ setShowLogin }) => {
       })
       .then((response) => {
         // Store login status in local storage
-        localStorage.setItem("isLoggedIn", true);
+        localStorage.setItem("token", response.data.token);
+        localStorage.setItem("username", response.data.username);
         toast.success("Login successful!");
         setUsername("");
         setPassword("");
+
+        // Fetch all users to find the specific user by username
+        axios
+          .get("http://localhost:8000/api/v1/auth/users")
+          .then((usersResponse) => {
+            const users = usersResponse.data;
+            console.log(users);
+            const foundUser = users.find(
+              (user) => user.username === response.data.username
+            );
+
+            if (foundUser) {
+              const userId = foundUser._id;
+              localStorage.setItem("userId", userId);
+            } else {
+              console.error("User not found");
+            }
+          })
+          .catch((error) => {
+            console.error("Error fetching users:", error);
+          });
+
         setTimeout(() => {
           setShowLogin(false);
         }, 2000);
+        console.log(response.data);
+        return response.data.username;
       })
       .catch((error) => {
         toast.error("Invalid username or password");
         console.error("Error during login:", error);
       });
   };
-  
 
   return (
     <div className={styles.modal}>
@@ -84,9 +108,19 @@ const Login = ({ setShowLogin }) => {
           />
         </div>
         {error && <p className={styles.error}>{error}</p>}
-        <Button name={'Login'} color={'#73ABFF'} handleClick={handleLogin} />
+        <Button name={"Login"} color={"#73ABFF"} handleClick={handleLogin} />
       </div>
-      <ToastContainer position="top-right" autoClose={2000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover />
+      <ToastContainer
+        position="top-right"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </div>
   );
 };

@@ -7,21 +7,58 @@ import styles1 from "../AddStory/AddStory.module.css";
 import Button from "../Button/Button";
 import Slide from "../Slide/Slide";
 import slides from "../Slide/Slide.module.css";
+import { useEditCardID } from "../../context/EditCardContext";
+import { useUserID } from "../../context/UserIdContext";
 
 const AddStory = ({ setShowAddStory }) => {
+  const { userID, setUserId } = useUserID();
+  const userId = userID;
+  const { clickedEditId, setClickedEditId } = useEditCardID();
+
   const [slidesData, setSlidesData] = useState([
     { id: 1, heading: "", description: "", image: "", category: "" },
     { id: 2, heading: "", description: "", image: "", category: "" },
     { id: 3, heading: "", description: "", image: "", category: "" },
   ]);
   const [currentSlide, setCurrentSlide] = useState(1);
+  const [editingStory, setEditingStory] = useState(null); // State to hold the details of the story being edited
 
   useEffect(() => {
     document.getElementById("slidesContainer").scrollTop = 9999;
   }, [slidesData]);
+  useEffect(() => {
+    const fetchStoryDetails = async () => {
+      try {
+        console.log(clickedEditId);
+        const response = await axios.get(
+          `http://localhost:8000/api/v1/story/${clickedEditId}`
+        ); // Replace URL_TO_FETCH_STORY_DETAILS with the actual endpoint
+        const storyDetails = response.data;
+        setEditingStory(storyDetails);
+        // Autofill the first slide with story details
+        setSlidesData([
+          {
+            ...slidesData[0],
+            heading: storyDetails.header,
+            description: storyDetails.description,
+            image: storyDetails.img,
+            category: storyDetails.type,
+          },
+          slidesData[1],
+          slidesData[2],
+        ]);
+      } catch (error) {
+        console.error("Error fetching story details:", error);
+      }
+    };
+
+    fetchStoryDetails();
+  }, []);
 
   const handleClose = () => {
+    console.log("clicked close")
     setShowAddStory(false);
+    setClickedEditId(false);
   };
 
   const handleSlideChange = (event, field) => {
@@ -74,54 +111,65 @@ const AddStory = ({ setShowAddStory }) => {
   };
 
   const handlePost = () => {
-  const isEmptyField = slidesData.some((slide) => {
-    return (
-      slide.heading.trim() === "" ||
-      slide.description.trim() === "" ||
-      slide.image.trim() === "" ||
-      slide.category.trim() === ""
-    );
-  });
-  if (isEmptyField) {
-    toast.error("Please fill in all fields for each slide.");
-    return;
-  }
-
-  // Optimistically update state
-  setShowAddStory(false);
-  setSlidesData([
-    { id: 1, heading: "", description: "", image: "", category: "" },
-    { id: 2, heading: "", description: "", image: "", category: "" },
-    { id: 3, heading: "", description: "", image: "", category: "" },
-  ]);
-  setCurrentSlide(1);
-
-  slidesData.forEach((slide) => {
-    const postData = {
-      img: slide.image,
-      header: slide.heading,
-      description: slide.description,
-      type: slide.category.toLowerCase(),
-    };
-
-    // Post the slide data
-    axios
-      .post("http://localhost:8000/api/v1/story/post-story", postData)
-      .then((response) => {
-        console.log("Slide posted:", response.data);
-        // Update state with the new data
-        setSlidesData((prevSlides) => [...prevSlides, response.data]);
-      })
-      .catch((error) => {
-        console.error("Error posting slide:", error);
-        // Handle the error here
-        toast.error("Error posting slide. Please try again later.");
+    if (editingStory) {
+      const editedSlide = slidesData[0];
+      const patchData = {
+        img: editedSlide.image,
+        header: editedSlide.heading,
+        description: editedSlide.description,
+        type: editedSlide.category.toLowerCase(),
+      };
+      axios
+        .patch(
+          `http://localhost:8000/api/v1/story/users/${userId}/${clickedEditId}`,
+          patchData
+        )
+        .then((response) => {
+          setClickedEditId(null);
+          console.log("Slide updated:", response.data);
+          toast.success("Slide updated successfully!");
+        })
+        .catch((error) => {
+          console.error("Error updating slide:", error);
+          toast.error("Error updating slide. Please try again later.");
+        });
+    } else {
+      const isEmptyField = slidesData.some((slide) => {
+        return (
+          slide.heading.trim() === "" ||
+          slide.description.trim() === "" ||
+          slide.image.trim() === "" ||
+          slide.category.trim() === ""
+        );
       });
-  });
-
-  toast.success("All slides posted successfully!");
-};
-
+      if (isEmptyField) {
+        toast.error("Please fill in all fields for each slide.");
+        return;
+      }
+      slidesData.forEach((slide) => {
+        const postData = {
+          img: slide.image,
+          header: slide.heading,
+          description: slide.description,
+          type: slide.category.toLowerCase(),
+        };
+        axios
+          .post(
+            `http://localhost:8000/api/v1/story/post-story/${userId}`,
+            postData
+          )
+          .then((response) => {
+            setShowAddStory(false);
+            console.log("Slide posted:", response.data);
+            toast.success("Slide posted successfully!");
+          })
+          .catch((error) => {
+            console.error("Error posting slide:", error);
+            toast.error("Error posting slide. Please try again later.");
+          });
+      });
+    }
+  };
 
   const handleCloseSlide = (index) => {
     console.log(index);
@@ -269,7 +317,7 @@ const AddStory = ({ setShowAddStory }) => {
       </div>
       <ToastContainer
         position="top-right"
-        autoClose={2000}
+        autoClose={1000}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick

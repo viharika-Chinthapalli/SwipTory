@@ -2,7 +2,6 @@
   width: 12rem;
   height: 19rem;
   text-align: center;
-  margin: 1rem;
   border-radius: 5px;
   position: relative;
   background-size: cover;
@@ -20,12 +19,15 @@
   color: white;
   margin-bottom: 10px;
   font-size: small;
+  padding: 0px 10px 0px 10px;
+  text-align: start;
 }
 
-h6 {
+.paragraph {
   color: white;
   font-size: 8px;
   text-align: start;
-  padding: 0.5rem;
+  padding: 0 10px 10px 10px;
   margin-top: 0;
 }
+

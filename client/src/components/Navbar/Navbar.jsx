@@ -7,7 +7,9 @@ import AddStory from "../AddStory/AddStory";
 import bookmarkImg from "../../assets/Vector.jpg";
 import profileImg from "../../assets/Calm and confident.png";
 import hamburger from "../../assets/hamburger.png";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate } from "react-router-dom";
+import { useEditCardID } from "../../context/EditCardContext";
+
 
 const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -15,12 +17,13 @@ const Navbar = () => {
   const [showLogin, setShowLogin] = useState(false);
   const [showAddStory, setShowAddStory] = useState(false);
   const [showLogout, setShowLogout] = useState(false);
-  const navigate = useNavigate(); // Initialize useNavigate
+  const { clickedEditId, setClickedEditId } = useEditCardID();
+  const navigate = useNavigate();
 
 
-  const loggedInStatus = localStorage.getItem("isLoggedIn");
+  const loggedInStatus = localStorage.getItem("token");
+  const username = localStorage.getItem("username");
   useEffect(() => {
-    // Check login status from local storage
     if (loggedInStatus) {
       setIsLoggedIn(true);
     }
@@ -39,8 +42,9 @@ const Navbar = () => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("isLoggedIn");
+    localStorage.clear();
     setIsLoggedIn(false);
+    setShowLogin(true);
   };
 
   const handleHamburgerClick = () => {
@@ -72,16 +76,16 @@ const Navbar = () => {
               color={"#FF7373"}
               handleClick={() => setShowAddStory(true)}
             />
-            <img className={styles.profileImg} src={profileImg} alt="" />
+            <img className={styles.profileImg} src={profileImg} alt="profile image" />
 
             <img
               className={styles.hamburger}
               src={hamburger}
               onClick={handleHamburgerClick}
-            />
+            /> 
             {showLogout && (
               <div className={styles.logoutDiv}>
-                <h3>Your Name</h3>
+                <h3>{username}</h3>
                 <Button
                   name={"Logout"}
                   color={"#FF7373"}
@@ -120,7 +124,12 @@ const Navbar = () => {
           <AddStory setShowAddStory={setShowAddStory} />
         </div>
       )}
-    </div>
+      {clickedEditId && (
+        <div className={styles.overlay}>
+          <AddStory setShowAddStory={setShowAddStory} />
+        </div>
+      )}
+    </div> 
   );
 };
 

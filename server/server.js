@@ -4,6 +4,8 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const authRoute = require("./routes/auth");
 const storyRoute = require("./routes/stories");
+const bookmarkRoute = require("./routes/bookmarks");
+const likeRoute = require("./routes/likes");
 
 
 const app = express();
@@ -18,6 +20,8 @@ mongoose
 
 app.use("/api/v1/auth", authRoute);
 app.use("/api/v1/story", storyRoute);
+app.use("/api/v1/", bookmarkRoute);
+app.use("/api/v1/like-story", likeRoute);
 
 app.use("*", (req, res) => {
     res.status(404).json({ errorMessage: "Route not found!" });

@@ -98,6 +98,10 @@ h6 {
   width: 15px;
 }
 
+.heartImg{
+  display: flex;
+  align-items: center;
+}
 .heartImg img{
   width: 20px;
 }
@@ -109,13 +113,13 @@ h6 {
   transform: translateX(-50%);
   display: flex;
   align-items: center;
-  /* width: 50%; */
+  width: 100%;
 }
 
 .progressDot {
   width: 20px;
   height: 2px;
-  background-color: #302e2e;
+  background-color: #302e2e; /* Default color */
   margin: 0 5px;
 }
 
@@ -123,26 +127,19 @@ h6 {
   position: relative;
   width: 20px;
   height: 2px;
-  background-color: white; /* Start with blue color */
+  background-color: white; /* Start with white color */
   margin: 0 5px;
-  animation: colorAnimation 5s linear infinite; /* Adjust the duration (5s) as needed */
 }
 
-@keyframes colorAnimation {
-  0% {
-    background-color: white /* Start with gray color */
-  }
-  100% {
-    background-color: white /* End with gray color */
-  }
-}
-
-.bookmarkImg {
-  /* Define styles for the unbookmarked icon */
-}
 
 .bookmarkedIcon {
   color: #085CFF;
+}
+
+.count{
+  color: white;
+  margin-left: 5px;
+  font-size:10px;
 }
 
 

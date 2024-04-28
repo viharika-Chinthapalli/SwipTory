@@ -7,7 +7,7 @@ const StoryCard = ({ story, onClick }) => {
   const backgroundImage = story.img ? `url(${story.img})` : defaultImage;
   
   const handleCardClick = () => {
-    onClick(story._id); // Pass the ID of the clicked card to the parent component
+    onClick(story._id);
   };
 
   return (

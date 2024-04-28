@@ -4,10 +4,22 @@ import axios from "axios";
 import styles from "./StoryCards.module.css";
 import StoryCard from "../StoryCard/StoryCard";
 import ViewStory from "../ViewStory/ViewStory";
+import Button from "../Button/Button";
+import edit from "../../assets/edit-btn.png";
+import { useClickedCard } from "../../context/ClickedCardContext";
+import { useEditCardID } from "../../context/EditCardContext";
 
 const StoryCards = ({ category }) => {
   const [stories, setStories] = useState([]);
-  const [clickedCardId, setClickedCardId] = useState(null);
+  // const {setClickedCardId} = useClickedCard();
+  const { clickedCardId, setClickedCardId } = useClickedCard();
+  const { setClickedEditId } = useEditCardID();
+
+  const [expandedCategories, setExpandedCategories] = useState([]);
+  const [filteredStories, setFilteredStories] = useState([]);
+  const [userStories, setUserStories] = useState([]);
+
+  const userId = localStorage.getItem("userId");
 
   useEffect(() => {
     const fetchStories = async () => {
@@ -23,91 +35,165 @@ const StoryCards = ({ category }) => {
       }
     };
 
+    const fetchUserStories = async () => {
+      try {
+        const userId = localStorage.getItem("userId");
+        const response = await axios.get(
+          `http://localhost:8000/api/v1/story/get-userstories/${userId}`
+        );
+        setUserStories(response.data.userStories);
+      } catch (error) {
+        console.error("Error fetching user stories:", error);
+      }
+    };
+
     fetchStories();
+    fetchUserStories();
   }, [category]);
 
   const handleCardClick = (id) => {
     console.log("Clicked card ID:", id);
-    setClickedCardId(id);
+    const clickedStory = stories.find((story) => story._id === id);
+    if (clickedStory) {
+      const storiesToSend = stories.filter(
+        (story) => story.type === clickedStory.type
+      );
+      setClickedCardId(id);
+      setFilteredStories(storiesToSend); // Set the filtered stories to state
+    }
   };
 
   const handleCloseModal = () => {
     setClickedCardId(null);
   };
 
-  const handleViewStory = () => {
-    if (clickedCardId) {
-      const clickedStoryIndex = stories.findIndex((story) => story._id === clickedCardId);
-      return clickedStoryIndex;
+  const handleViewAllClick = (clickedCategory) => {
+    setExpandedCategories((prevExpandedCategories) => {
+      // Add the clicked category to the list of expanded categories
+      if (!prevExpandedCategories.includes(clickedCategory)) {
+        return [...prevExpandedCategories, clickedCategory];
+      } else {
+        // Remove the clicked category if it's already expanded
+        return prevExpandedCategories.filter(
+          (category) => category !== clickedCategory
+        );
+      }
+    });
+  };
+
+  const handleEdit = async (id) => {
+    try {
+      console.log("clicked id", id);
+      setClickedEditId(id);
+      const response = await axios.get(`http://localhost:8000/api/v1/story/${id}`);
+      setFilteredStories([response.data.story]);
+    } catch (error) {
+      console.error("Error fetching story details:", error);
     }
-    return null;
   };
 
   return (
     <div>
       {clickedCardId !== null && (
         <ViewStory
-          stories={stories}
-          currentIndex={handleViewStory()}
+          stories={filteredStories}
+          currentIndex={filteredStories.findIndex(
+            (story) => story._id === clickedCardId
+          )}
           onClose={handleCloseModal}
         />
       )}
-      <>
-        {category === "all" && (
-          <div>
-            {["medical", "fruits", "world", "india"].map((card) => (
-              <div key={card}>
-                <h2 className={styles.heading}>Top Stories about {card}</h2>
-                <div className={styles.container}>
-                  {stories
-                    .filter((story) => story.type === card)
-                    .map((filteredStory) => (
+      {category === "all" && (
+        <>
+          {["medical", "fruits", "world", "india"].map((card) => (
+            <div key={card}>
+              <h2 className={styles.heading}>Top Stories about {card}</h2>
+              <div className={styles.container}>
+                {stories
+                  .filter((story) => story.type === card)
+                  .slice(
+                    0,
+                    expandedCategories.includes(card) ? stories.length : 4
+                  )
+                  .map((filteredStory) => (
+                    <div key={filteredStory._id}>
                       <StoryCard
-                        key={filteredStory._id}
                         story={filteredStory}
                         onClick={handleCardClick}
                       />
-                    ))}
-                </div>
-                {stories.filter((story) => story.type === card).length ===
-                  0 && (
-                  <h2 className={`${styles.heading} ${styles.para}`}>
-                    No cards available
-                  </h2>
-                )}
+                      {userStories.includes(filteredStory._id) && (
+                        <span className={styles.edit}>
+                          <img
+                            className={styles.editImage}
+                            src={edit}
+                            alt="edit image"
+                          />
+                          <Button
+                            name={"Edit"}
+                            color={"#FFFFFF"}
+                            handleClick={() => handleEdit(filteredStory._id)}
+                          />
+                        </span>
+                      )}
+                    </div>
+                  ))}
               </div>
-            ))}
-          </div>
-        )}
-        {category !== "all" && (
-          <div>
-            <h2 className={styles.heading}>Top Stories about {category}</h2>
-            <div className={styles.container}>
-              {stories.length > 0 ? (
-                stories.map((story) => (
-                  <StoryCard
-                    key={story._id}
-                    story={story}
-                    onClick={handleCardClick}
+              {stories.length === 0 && (
+                <h1 className={styles.para}>No stories Available</h1>
+              )}
+              {stories.length !== 0 && !expandedCategories.includes(card) && (
+                <div className={styles.btn}>
+                  <Button
+                    name={"See more"}
+                    color={"#FF7373"}
+                    handleClick={() => handleViewAllClick(card)}
                   />
-                ))
-              ) : (
-                <p>No cards available for {category}</p>
+                </div>
               )}
             </div>
+          ))}
+        </>
+      )}
+      {category !== "all" && (
+        <div>
+          <h2 className={styles.heading}>Top Stories about {category}</h2>
+          <div className={styles.container}>
+            {stories.length > 0 ? (
+              stories.map((story) => (
+                <div key={story._id} className={styles.cardContainer}>
+                    <StoryCard story={story} onClick={handleCardClick} />
+                  {userStories.includes(story._id) && (
+                      <span className={styles.edit}>
+                        <img
+                          className={styles.editImage}
+                          src={edit}
+                          alt="edit image"
+                        />
+                        <Button
+                          name={"Edit"}
+                          color={"#FFFFFF"}
+                          handleClick={() => handleEdit()}
+                        />
+                      </span>
+                  )}
+                </div>
+              ))
+            ) : (
+              <p className={styles.para}>No cards available for {category}</p>
+            )}
           </div>
-        )}
-      </>
+        </div>
+      )}
     </div>
   );
 };
 
 StoryCards.propTypes = {
-  category: PropTypes.string, // Allow null values
+  category: PropTypes.string,
 };
 
 StoryCards.defaultProps = {
-  category: null, // Set default value to null
+  category: null,
 };
 
 export default StoryCards;
