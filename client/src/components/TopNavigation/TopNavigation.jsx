@@ -20,7 +20,7 @@ TopNavigation.propTypes = {
       header: PropTypes.string.isRequired
     })
   ).isRequired,
-  onClick: PropTypes.func.isRequired, // onClick prop is a function to switch stories
+  onClick: PropTypes.func.isRequired,
 };
 
 export default TopNavigation;

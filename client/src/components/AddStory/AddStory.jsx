@@ -27,12 +27,14 @@ const AddStory = ({ setShowAddStory }) => {
     document.getElementById("slidesContainer").scrollTop = 9999;
   }, [slidesData]);
 
+  console.log(import.meta.env.REACT_APP_BACKEND_URL);
+
   useEffect(() => {
     const fetchStoryDetails = async () => {
       try {
         console.log(clickedEditId);
         const response = await axios.get(
-          `http://localhost:8000/api/v1/story/${clickedEditId}`
+          `${import.meta.env.REACT_APP_BACKEND_URL}/story/${clickedEditId}`
         ); 
         const storyDetails = response.data;
         setEditingStory(storyDetails);
@@ -119,10 +121,8 @@ const AddStory = ({ setShowAddStory }) => {
         description: editedSlide.description,
         type: editedSlide.category.toLowerCase(),
       };
-      axios
-        .patch(
-          `http://localhost:8000/api/v1/story/users/${userId}/${clickedEditId}`,
-          patchData
+        axios.patch(
+          `${import.meta.env.REACT_APP_BACKEND_URL}/story/users/${userId}/${clickedEditId}`, patchData
         )
         .then((response) => {
           setClickedEditId(null);
@@ -155,7 +155,7 @@ const AddStory = ({ setShowAddStory }) => {
         };
         axios
           .post(
-            `http://localhost:8000/api/v1/story/post-story/${userId}`,
+            `${import.meta.env.REACT_APP_BACKEND_URL}/story/post-story/${userId}`,
             postData
           )
           .then((response) => {

@@ -21,7 +21,7 @@ const BookmarksPage = () => {
     const userId = localStorage.getItem("userId");
     try {
       const response = await axios.get(
-        `http://localhost:8000/api/v1/bookmarks/${userId}`
+        `${import.meta.env.REACT_APP_BACKEND_URL}/bookmarks/${userId}`
       );
       const bookmarkedStoryIds = response.data.bookmarkedStories;
 
@@ -31,7 +31,7 @@ const BookmarksPage = () => {
         const storiesData = await Promise.all(
           bookmarkedStoryIds.map(async (storyId) => {
             const storyResponse = await axios.get(
-              `http://localhost:8000/api/v1/story/${storyId}`
+              `${import.meta.env.REACT_APP_BACKEND_URL}/story/${storyId}`
             );
             return storyResponse.data;
           })

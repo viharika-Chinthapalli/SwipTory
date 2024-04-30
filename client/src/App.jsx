@@ -20,7 +20,6 @@ function App() {
             <Routes>
               <Route path="/" element={<HomePage />} />{" "}
               <Route path="/bookmarks" element={<BookmarksPage />} />{" "}
-              <Route path="/view-story/:storyID" element={<ShareStory />} />{" "}
             </Routes>
           </BrowserRouter>
           <BrowserRouter>

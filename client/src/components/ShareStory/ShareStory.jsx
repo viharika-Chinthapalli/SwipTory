@@ -17,12 +17,14 @@ const ShareStory = () => {
   const [currentStoryIndex, setCurrentStoryIndex] = useState(clickedID);
   const userID = localStorage.getItem("userID");
 
+  console.log(clickedID);
   useEffect(() => {
     const fetchStoryById = async () => {
       if (clickedID) {
         const response = await axios.get(
-          `http://localhost:8000/api/v1/story/${clickedID}`
+          `${import.meta.env.REACT_APP_BACKEND_URL}/story/${clickedID}`
         );
+        console.log(story)
         setStory(response.data);
       }
     };
@@ -33,7 +35,7 @@ const ShareStory = () => {
     const fetchStories = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8000/api/v1/story/get-stories"
+          `${import.meta.env.REACT_APP_BACKEND_URL}/story/get-stories`
         );
         console.log(response)
         setStories(response.data.stories);

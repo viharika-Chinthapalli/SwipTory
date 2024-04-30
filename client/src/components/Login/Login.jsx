@@ -29,7 +29,7 @@ const Login = ({ setShowLogin }) => {
     }
 
     axios
-      .post("http://localhost:8000/api/v1/auth/login", {
+      .post(`${import.meta.env.REACT_APP_BACKEND_URL}/auth/login`, {
         username: username,
         password: password,
       })
@@ -41,7 +41,7 @@ const Login = ({ setShowLogin }) => {
         setPassword("");
 
         axios
-          .get("http://localhost:8000/api/v1/auth/users")
+          .get(`${import.meta.env.REACT_APP_BACKEND_URL}/auth/users`)
           .then((usersResponse) => {
             const users = usersResponse.data;
             console.log(users);

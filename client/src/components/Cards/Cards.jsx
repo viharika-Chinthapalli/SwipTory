@@ -11,9 +11,9 @@ import worldImg from '../../assets/world.png';
 const Cards = ({ onCategorySelect }) => {
   const handleCardClick = async (type) => {
     try {
-      let url = `http://localhost:8000/api/v1/story/stories?type=${type}`;
+      let url = `${import.meta.env.REACT_APP_BACKEND_URL}/story/stories?type=${type}`;
       if (type === 'all') {
-        url = 'http://localhost:8000/api/v1/story/get-stories';
+        url = `${import.meta.env.REACT_APP_BACKEND_URL}/story/get-stories`;
       }
       const response = await axios.get(url);
       onCategorySelect(type);

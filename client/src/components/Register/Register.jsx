@@ -34,7 +34,7 @@ const Register = ({ setShowRegister }) => {
     };
 
     axios
-    .post("http://localhost:8000/api/v1/auth/register", userData)
+    .post(`${import.meta.env.REACT_APP_BACKEND_URL}/auth/register`, userData)
     .then((response) => {
       localStorage.setItem("token", response.data.token);
       toast.success("Registration successful!");

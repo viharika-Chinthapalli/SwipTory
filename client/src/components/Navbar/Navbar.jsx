@@ -17,7 +17,7 @@ const Navbar = () => {
   const [showAddStory, setShowAddStory] = useState(false);
   const [showLogout, setShowLogout] = useState(false);
   const { clickedEditId, setClickedEditId } = useEditCardID();
-  const [showMenu, setShowMenu] = useState(false); // State to control hamburger menu
+  const [showMenu, setShowMenu] = useState(false);
 
   const navigate = useNavigate();
 

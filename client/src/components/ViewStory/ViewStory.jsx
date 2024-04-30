@@ -39,7 +39,7 @@ const ViewStory = ({ stories, currentIndex, onClose }) => {
     const fetchInitialBookmarkStatus = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8000/api/v1/bookmarks/${userId}`
+          `${import.meta.env.REACT_APP_BACKEND_URL}/bookmarks/${userId}`
         );
         const bookmarkedStoryIds = response.data.bookmarkedStories;
         const initialBookmarkStatus = {};
@@ -67,7 +67,7 @@ const ViewStory = ({ stories, currentIndex, onClose }) => {
     const fetchInitialLikedStatus = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8000/api/v1/like-story/likes/${userId}`
+          `${import.meta.env.REACT_APP_BACKEND_URL}/like-story/likes/${userId}`
         );
         const likedStoryIds = response.data.likedStories;
         const updatedLikeStatus = {};
@@ -91,7 +91,7 @@ const ViewStory = ({ stories, currentIndex, onClose }) => {
   useEffect(() => {
     const fetchLikes = async () => {
       try {
-        const url = `http://localhost:8000/api/v1/story/${storyId}`;
+        const url = `${import.meta.env.REACT_APP_BACKEND_URL}/story/${storyId}`;
         const response = await axios.get(url);
         setLikes(response.data.likeCount);
         console.log(response.data.likeCount);
@@ -122,12 +122,11 @@ const ViewStory = ({ stories, currentIndex, onClose }) => {
 
   const handleShare = () => {
     const story = stories[currentStoryIndex];
-    const storyLink = `http://localhost:5173/story/${story._id}`;
+    const storyLink = `${import.meta.env.REACT_APP_STORY_URL}/view-story/${story._id}`;
+    
     navigator.clipboard.writeText(storyLink);
 
-    toast.success("Link copied to clipboard!", {
-      position: toast.POSITION.BOTTOM_CENTER,
-    });
+    toast.success("Link copied to clipboard!");
   };
 
   const handleBookmark = async () => {
@@ -138,7 +137,7 @@ const ViewStory = ({ stories, currentIndex, onClose }) => {
 
     try {
       const response = await axios.post(
-        `http://localhost:8000/api/v1/bookmark/${userId}/${storyId}`
+        `${import.meta.env.REACT_APP_BACKEND_URL}/bookmark/${userId}/${storyId}`
       );
       const bookmarkedStoryIds = response.data.bookmark.bookmarkedStories;
       const updatedBookmarkStatus = {};
@@ -163,7 +162,7 @@ const ViewStory = ({ stories, currentIndex, onClose }) => {
 
     try {
       const response = await axios.post(
-        `http://localhost:8000/api/v1/like-story/like/${userId}/${storyId}`
+        `${import.meta.env.REACT_APP_BACKEND_URL}/like-story/like/${userId}/${storyId}`
       );
       const updatedLikeStatus = { ...likeStatus };
       const likedStoryIds = response.data.like.likedStories;

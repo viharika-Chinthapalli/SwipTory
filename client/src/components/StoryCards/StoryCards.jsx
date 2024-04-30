@@ -20,13 +20,16 @@ const StoryCards = ({ category }) => {
   const [userStories, setUserStories] = useState([]);
 
   const userId = localStorage.getItem("userId");
+  localStorage.setItem("storyId", clickedCardId);
+  console.log(userStories)
+
 
   useEffect(() => {
     const fetchStories = async () => {
       try {
-        let url = "http://localhost:8000/api/v1/story/get-stories";
+        let url = `${import.meta.env.REACT_APP_BACKEND_URL}/story/get-stories`;
         if (category && category !== "all") {
-          url = `http://localhost:8000/api/v1/story/stories?type=${category}`;
+          url = `${import.meta.env.REACT_APP_BACKEND_URL}/story/stories?type=${category}`;
         }
         const response = await axios.get(url);
         setStories(response.data.stories);
@@ -39,7 +42,7 @@ const StoryCards = ({ category }) => {
       try {
         const userId = localStorage.getItem("userId");
         const response = await axios.get(
-          `http://localhost:8000/api/v1/story/get-userstories/${userId}`
+          `${import.meta.env.REACT_APP_BACKEND_URL}/story/get-userstories/${userId}`
         );
         setUserStories(response.data.userStories);
       } catch (error) {
@@ -59,7 +62,7 @@ const StoryCards = ({ category }) => {
         (story) => story.type === clickedStory.type
       );
       setClickedCardId(id);
-      setFilteredStories(storiesToSend); // Set the filtered stories to state
+      setFilteredStories(storiesToSend);
     }
   };
 
@@ -69,11 +72,9 @@ const StoryCards = ({ category }) => {
 
   const handleViewAllClick = (clickedCategory) => {
     setExpandedCategories((prevExpandedCategories) => {
-      // Add the clicked category to the list of expanded categories
       if (!prevExpandedCategories.includes(clickedCategory)) {
         return [...prevExpandedCategories, clickedCategory];
       } else {
-        // Remove the clicked category if it's already expanded
         return prevExpandedCategories.filter(
           (category) => category !== clickedCategory
         );
@@ -85,7 +86,7 @@ const StoryCards = ({ category }) => {
     try {
       console.log("clicked id", id);
       setClickedEditId(id);
-      const response = await axios.get(`http://localhost:8000/api/v1/story/${id}`);
+      const response = await axios.get(`${import.meta.env.REACT_APP_BACKEND_URL}/story/${id}`);
       setFilteredStories([response.data.story]);
     } catch (error) {
       console.error("Error fetching story details:", error);

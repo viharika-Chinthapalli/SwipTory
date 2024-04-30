@@ -52,7 +52,7 @@ const getUserStories = async (req, res) => {
     if (!userStory) {
       return res.status(404).json({ errorMessage: "User stories not found" });
     }
-    res.json({ userStories: userStory.userStories });
+    res.json({userId, userStories: userStory.userStories });
   } catch (error) {
     console.error("Error getting user stories:", error);
     res.status(500).json({ errorMessage: "Something went wrong" });
