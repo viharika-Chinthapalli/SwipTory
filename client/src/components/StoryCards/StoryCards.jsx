@@ -91,7 +91,7 @@ const StoryCards = ({ category }) => {
       console.error("Error fetching story details:", error);
     }
   };
-
+ 
   return (
     <div>
       {clickedCardId !== null && (
@@ -102,7 +102,7 @@ const StoryCards = ({ category }) => {
           )}
           onClose={handleCloseModal}
         />
-      )}
+      )} 
       {category === "all" && (
         <>
           {["medical", "fruits", "world", "india"].map((card) => (

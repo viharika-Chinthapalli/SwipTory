@@ -8,6 +8,7 @@ router.get("/get-userstories/:userId", userStoriesController.getUserStories);
 router.patch("/users/:userId/:storyId", userStoriesController.updateUserStory);
 router.get("/get-stories", storyController.getAllStories);
 router.get("/stories", storyController.getStoriesBasedOnType);
+router.get("/view-story/:storyId", storyController.viewStory);
 router.get("/:id", storyController.getStoryById);
 
 module.exports = router;

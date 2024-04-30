@@ -12,6 +12,11 @@
   margin: 0.5rem;
   position: relative;
 }
+.selected {
+  border: 2px solid #73ABFF
+}
+
+
 
 .closeButton{
   position: absolute;

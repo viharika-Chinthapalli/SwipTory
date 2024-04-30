@@ -10,7 +10,7 @@ const HomePage = () => {
   };
 
   return (
-    <div>
+    <div style={{"width":"100%"}}>
       <Cards onCategorySelect={handleCategorySelect} />
       <StoryCards category={selectedCategory} />
     </div>

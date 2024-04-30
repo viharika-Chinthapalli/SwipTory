@@ -21,7 +21,7 @@ const StoryCard = ({ story, onClick }) => {
         <h6 className={styles.paragraph}>{story.description}</h6>
       </div>
     </div>
-  );
+  ); 
 };
 
 StoryCard.propTypes = {

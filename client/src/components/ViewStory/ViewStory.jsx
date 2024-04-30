@@ -31,7 +31,6 @@ const ViewStory = ({ stories, currentIndex, onClose }) => {
   }, [currentStoryIndex]);
 
   useEffect(() => {
-    // Check login status from local storage
     const loggedInStatus = localStorage.getItem("token");
     if (loggedInStatus) {
       setIsLoggedIn(true);
@@ -52,9 +51,7 @@ const ViewStory = ({ stories, currentIndex, onClose }) => {
         setBookmarkStatus(initialBookmarkStatus);
       } catch (error) {
         console.error("Error fetching initial bookmark status:", error);
-        toast.error("Failed to fetch initial bookmark status", {
-          position: toast.POSITION.BOTTOM_CENTER,
-        });
+        toast.error("Failed to fetch initial bookmark status");
       }
     };
 
@@ -62,7 +59,6 @@ const ViewStory = ({ stories, currentIndex, onClose }) => {
   }, [userId, stories]);
 
   useEffect(() => {
-    // Check login status from local storage
     const loggedInStatus = localStorage.getItem("token");
     if (loggedInStatus) {
       setIsLoggedIn(true);
@@ -70,10 +66,10 @@ const ViewStory = ({ stories, currentIndex, onClose }) => {
 
     const fetchInitialLikedStatus = async () => {
       try {
-        const response = await axios.post(
-          `http://localhost:8000/api/v1/like-story/like/${userId}/${storyId}`
+        const response = await axios.get(
+          `http://localhost:8000/api/v1/like-story/likes/${userId}`
         );
-        const likedStoryIds = response.data.like.likedStories;
+        const likedStoryIds = response.data.likedStories;
         const updatedLikeStatus = {};
         for (const story of stories) {
           updatedLikeStatus[story._id] = likedStoryIds.includes(
@@ -92,6 +88,22 @@ const ViewStory = ({ stories, currentIndex, onClose }) => {
     fetchInitialLikedStatus();
   }, [userId, stories]);
 
+  useEffect(() => {
+    const fetchLikes = async () => {
+      try {
+        const url = `http://localhost:8000/api/v1/story/${storyId}`;
+        const response = await axios.get(url);
+        setLikes(response.data.likeCount);
+        console.log(response.data.likeCount);
+      } catch (error) {
+        console.error(`Error fetching likes for story ${storyId}:`, error);
+        setLikes(0); // Set likes to 0 if there's an error fetching likes
+      }
+    };
+
+    fetchLikes();
+  }, [storyId]);
+
   const handleNext = () => {
     setCurrentStoryIndex((prevIndex) =>
       prevIndex === stories.length - 1 ? 0 : prevIndex + 1
@@ -109,12 +121,10 @@ const ViewStory = ({ stories, currentIndex, onClose }) => {
   };
 
   const handleShare = () => {
-    // Copy link to clipboard
     const story = stories[currentStoryIndex];
     const storyLink = `http://localhost:5173/story/${story._id}`;
     navigator.clipboard.writeText(storyLink);
 
-    // Show toast message
     toast.success("Link copied to clipboard!", {
       position: toast.POSITION.BOTTOM_CENTER,
     });
@@ -122,7 +132,6 @@ const ViewStory = ({ stories, currentIndex, onClose }) => {
 
   const handleBookmark = async () => {
     if (!isLoggedIn) {
-      // Handle case when user is not logged in
       toast.error("Please log in to bookmark.");
       return;
     }
@@ -148,7 +157,6 @@ const ViewStory = ({ stories, currentIndex, onClose }) => {
 
   const handleLike = async () => {
     if (!isLoggedIn) {
-      // Handle case when user is not logged in
       toast.error("Please log in to like.");
       return;
     }
@@ -157,36 +165,22 @@ const ViewStory = ({ stories, currentIndex, onClose }) => {
       const response = await axios.post(
         `http://localhost:8000/api/v1/like-story/like/${userId}/${storyId}`
       );
+      const updatedLikeStatus = { ...likeStatus };
       const likedStoryIds = response.data.like.likedStories;
-      const updatedLikeStatus = {};
-      for (const story of stories) {
-        updatedLikeStatus[story._id] = likedStoryIds.includes(
-          String(story._id)
-        );
-      }
+
+      updatedLikeStatus[storyId] = !updatedLikeStatus[storyId];
+
+      const likeCountChange = updatedLikeStatus[storyId] ? 1 : -1;
+      setLikes(likes + likeCountChange);
+
       setLikeStatus(updatedLikeStatus);
+
       toast.success("Like status toggled successfully");
     } catch (error) {
       console.error("Error toggling like status:", error);
       toast.error("Failed to toggle like status");
     }
   };
-
-  useEffect(() => {
-    const fetchLikes = async () => {
-      try {
-        const url = `http://localhost:8000/api/v1/story/${storyId}`;
-        const response = await axios.get(url);
-        setLikes(response.data.likeCount); // Update state with the like count
-      } catch (error) {
-        console.error(`Error fetching likes for story ${storyId}:`, error);
-        setLikes(0); // Set likes to 0 if there's an error fetching likes
-      }
-    };
-  
-    fetchLikes();
-  }, [storyId]);
-  
 
   return (
     <div className={styles.overlay1}>
@@ -216,10 +210,10 @@ const ViewStory = ({ stories, currentIndex, onClose }) => {
               )}
             </div>
             <div className={styles.heartImg} onClick={handleLike}>
-              {likeStatus[story._id] === true ? (
-                <img src={TrueHeart} alt="heart img" />
-              ) : (
+              {likeStatus[story._id] !== true ? (
                 <img src={heartImg} alt="heart img" />
+              ) : (
+                <img src={TrueHeart} alt="heart img" />
               )}
               <div className={styles.count}>{likes}</div>
             </div>
@@ -257,7 +251,7 @@ ViewStory.propTypes = {
       img: PropTypes.string,
       header: PropTypes.string.isRequired,
       description: PropTypes.string.isRequired,
-      likeCount: PropTypes.number.isRequired, // Add this line for likeCount validation
+      likeCount: PropTypes.number.isRequired,
     })
   ).isRequired,
   currentIndex: PropTypes.number.isRequired,

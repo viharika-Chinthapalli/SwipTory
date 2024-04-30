@@ -21,7 +21,7 @@ const Cards = ({ onCategorySelect }) => {
       console.error('Error fetching stories:', error);
     }
   };
-
+ 
   return (
     <div className={styles.container}>
       <Card image={AllImg} title="All" onClick={() => handleCardClick('all')} />

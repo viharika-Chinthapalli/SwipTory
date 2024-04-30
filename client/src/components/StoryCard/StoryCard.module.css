@@ -31,3 +31,23 @@
   margin-top: 0;
 }
 
+@media screen and (max-width: 600px) {
+  .container {
+    width: 22rem;
+    height: 27rem;
+  }
+  .heading {
+    margin-bottom: 10px;
+    font-size: 25px;
+    padding: 0px 10px 0px 10px;
+    text-align: start;
+  }
+  
+  .paragraph {
+    color: white;
+    font-size: 15px;
+    text-align: start;
+    padding: 0 10px 10px 10px;
+    margin-top: 0;
+  }
+}

@@ -7,6 +7,7 @@ export const UserIDProvider = ({ children }) => {
 
   // Fetch user ID from local storage on component mount
   const storedUserId = localStorage.getItem("userId");
+  console.log(storedUserId);
   useEffect(() => {
     if (storedUserId) {
       setUserId(storedUserId);

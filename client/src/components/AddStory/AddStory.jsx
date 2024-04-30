@@ -21,21 +21,21 @@ const AddStory = ({ setShowAddStory }) => {
     { id: 3, heading: "", description: "", image: "", category: "" },
   ]);
   const [currentSlide, setCurrentSlide] = useState(1);
-  const [editingStory, setEditingStory] = useState(null); // State to hold the details of the story being edited
+  const [editingStory, setEditingStory] = useState(null);
 
   useEffect(() => {
     document.getElementById("slidesContainer").scrollTop = 9999;
   }, [slidesData]);
+
   useEffect(() => {
     const fetchStoryDetails = async () => {
       try {
         console.log(clickedEditId);
         const response = await axios.get(
           `http://localhost:8000/api/v1/story/${clickedEditId}`
-        ); // Replace URL_TO_FETCH_STORY_DETAILS with the actual endpoint
+        ); 
         const storyDetails = response.data;
         setEditingStory(storyDetails);
-        // Autofill the first slide with story details
         setSlidesData([
           {
             ...slidesData[0],
@@ -205,7 +205,8 @@ const AddStory = ({ setShowAddStory }) => {
                 onClick={() => setCurrentSlide(slide.id)}
                 onClose={() => handleCloseSlide(slide.id)}
                 showCloseButton={index >= 3}
-              />
+                isSelected={currentSlide === slide.id}
+                />
             ))}
 
             {slidesData.length < 6 && (

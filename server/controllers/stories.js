@@ -35,8 +35,17 @@ const getStoryById = async (req, res) => {
   }
 };
 
+const viewStory = async (req, res) => {
+  const { storyId } = req.params;
+  // Here you can construct the link using the storyId
+  const shareLink = `http://localhost:5173/view-story/${storyId}`;
+  res.json({ shareLink }); // Sending the constructed link as response
+};
+
+
 module.exports = {
   getAllStories,
   getStoriesBasedOnType,
   getStoryById,
+  viewStory
 };

@@ -19,7 +19,6 @@ const registerUser = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create the user data object before using it to generate the token
     const userData = new User({
       username,
       password: hashedPassword,
@@ -27,19 +26,20 @@ const registerUser = async (req, res) => {
 
     await userData.save();
 
-    // Generate token using the newly registered user's data
     const token = jwt.sign(
       { userId: userData._id, username: userData.username },
       process.env.SECRET_CODE,
       { expiresIn: "24h" }
     );
 
-    res.json({ message: "User registered successfully", token: token });
+    // Include userId in the response
+    res.json({ message: "User registered successfully", token: token, userId: userData._id });
   } catch (error) {
     console.log(error);
     res.status(500).json({ errorMessage: "Something went wrong!" });
   }
 };
+
 
 const loginUser = async (req, res) => {
   try {

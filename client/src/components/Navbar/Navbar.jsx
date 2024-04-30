@@ -10,7 +10,6 @@ import hamburger from "../../assets/hamburger.png";
 import { useNavigate } from "react-router-dom";
 import { useEditCardID } from "../../context/EditCardContext";
 
-
 const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
@@ -18,8 +17,9 @@ const Navbar = () => {
   const [showAddStory, setShowAddStory] = useState(false);
   const [showLogout, setShowLogout] = useState(false);
   const { clickedEditId, setClickedEditId } = useEditCardID();
-  const navigate = useNavigate();
+  const [showMenu, setShowMenu] = useState(false); // State to control hamburger menu
 
+  const navigate = useNavigate();
 
   const loggedInStatus = localStorage.getItem("token");
   const username = localStorage.getItem("username");
@@ -51,9 +51,84 @@ const Navbar = () => {
     setShowLogout(!showLogout);
   };
 
+  const handleSmallScreenHamburger = () => {
+    setShowMenu(!showMenu);
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.title}>SwipTory</div>
+      <div>
+        <img
+          className={styles.hamburger1}
+          src={hamburger}
+          onClick={handleSmallScreenHamburger}
+          alt="Hamburger Menu"
+        />
+        {showMenu && (
+          <div className={styles.btn2}>
+            <div className={styles.menu}>
+              {isLoggedIn ? (
+                <>
+                  <div className={styles.menuItem}>
+                    <h3>{username}</h3>
+
+                    <Button
+                      name={
+                        <div className={styles.btn3}>
+                          <img
+                            className={styles.bookmarkImg}
+                            src={bookmarkImg}
+                            alt=""
+                          />
+                          Bookmarks
+                        </div>
+                      }
+                      color={"#FF7373"}
+                      handleClick={handleBookmarks}
+                    />
+                  </div>
+
+                  <div className={styles.menuItem}>
+                    <Button
+                      name={"Add Story"}
+                      color={"#FF7373"}
+                      handleClick={() => setShowAddStory(true)}
+                    />
+                  </div>
+
+                  {showMenu && (
+                    <div className={styles.menuItem}>
+                      <Button
+                        name={"Logout"}
+                        color={"#FF7373"}
+                        handleClick={handleLogout}
+                      />
+                    </div>
+                  )}
+                </>
+              ) : (
+                <>
+                  <div className={styles.menuItem}>
+                    <Button
+                      name={"Register Now"}
+                      color={"#FF7373"}
+                      handleClick={handleRegister}
+                    />
+                  </div>
+                  <div className={styles.menuItem}>
+                    <Button
+                      name={"Sign In"}
+                      color={"#73ABFF"}
+                      handleClick={handleLogin}
+                    />
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
       <div className={styles.btn1}>
         {isLoggedIn ? (
           <>
@@ -65,7 +140,7 @@ const Navbar = () => {
                     src={bookmarkImg}
                     alt=""
                   />
-                  Bookmark
+                  Bookmarks
                 </div>
               }
               color={"#FF7373"}
@@ -76,13 +151,17 @@ const Navbar = () => {
               color={"#FF7373"}
               handleClick={() => setShowAddStory(true)}
             />
-            <img className={styles.profileImg} src={profileImg} alt="profile image" />
+            <img
+              className={styles.profileImg}
+              src={profileImg}
+              alt="profile image"
+            />
 
             <img
               className={styles.hamburger}
               src={hamburger}
               onClick={handleHamburgerClick}
-            /> 
+            />
             {showLogout && (
               <div className={styles.logoutDiv}>
                 <h3>{username}</h3>
@@ -129,7 +208,7 @@ const Navbar = () => {
           <AddStory setShowAddStory={setShowAddStory} />
         </div>
       )}
-    </div> 
+    </div>
   );
 };
 

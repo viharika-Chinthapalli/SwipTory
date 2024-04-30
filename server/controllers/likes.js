@@ -27,7 +27,9 @@ const likeStory = async (req, res) => {
         like.likedStories = like.likedStories.filter(
           (liked) => liked.toString() !== storyId
         );
-        story.likeCount -= 1; // Decrement like count
+        if (story.likeCount > 0) {
+          story.likeCount -= 1; // Decrement like count
+        }
       } else {
         // Like the story
         like.likedStories.push(storyId);
@@ -45,4 +47,19 @@ const likeStory = async (req, res) => {
   }
 };
 
-module.exports = { likeStory };
+const getUserLikes = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const likes = await Like.findOne({ userId });
+    if (!likes) {
+      // If no likes found, return an empty array with userId
+      return res.json({ userId, likes: [] });
+    }
+    res.json(likes);
+  } catch (error) {
+    console.error("Error fetching user likes:", error);
+    res.status(500).json({ errorMessage: "Something went wrong" });
+  }
+};
+
+module.exports = { likeStory, getUserLikes };

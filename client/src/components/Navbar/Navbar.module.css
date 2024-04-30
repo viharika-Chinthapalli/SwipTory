@@ -4,6 +4,7 @@
   box-shadow: 0px 5px 5px rgb(224, 219, 219);
   justify-content: space-between;
   padding: 0.5rem 5%;
+  position: relative; 
 }
 
 .title{
@@ -28,6 +29,10 @@
   display: flex;
   align-items: center;
 }
+.btn2{
+  display: flex;
+  /* align-items: center; */
+}
 .bookmarkImg{
   width: 15px;
   height: 15px;
@@ -41,6 +46,10 @@
 .hamburger{
   width: 15px;
 }
+.hamburger1{
+  width: 15px;
+  display: none;
+}
 .logoutDiv{
   position: absolute;
   right: 0;
@@ -50,4 +59,50 @@
   z-index: 100;
   box-shadow: 0 0 10px gray;
   background-color: white;
+}
+
+.btn2{
+  flex-direction: column;
+  width: auto;
+  /* background-color: aqua; */
+}
+.btn3{
+  display: flex;
+}
+.menu {
+  position: absolute;
+  top: 100%;
+  /* right: 0; */
+  left: 10px;
+  background-color: #ffffff;
+  /* box-shadow: 0 0 10px gray; */
+  z-index: 10; /* Ensure the menu appears on top of other content */
+  padding: 1rem;
+  display: none;
+  width: 90%;
+  /* max-width: fit-content; */
+  overflow-x: hidden;
+}
+
+.menuItem {
+  margin: auto;
+  margin-bottom: 1rem;
+  width: fit-content;
+  text-align: center;
+}
+
+
+
+
+@media screen and (max-width: 600px) {
+  .btn1{
+    display: none;
+  }
+
+  .menu{
+    display: block;
+  }
+  .hamburger1{
+    display: block;
+  }
 }

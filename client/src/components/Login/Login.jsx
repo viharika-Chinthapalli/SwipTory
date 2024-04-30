@@ -34,14 +34,12 @@ const Login = ({ setShowLogin }) => {
         password: password,
       })
       .then((response) => {
-        // Store login status in local storage
         localStorage.setItem("token", response.data.token);
         localStorage.setItem("username", response.data.username);
         toast.success("Login successful!");
         setUsername("");
         setPassword("");
 
-        // Fetch all users to find the specific user by username
         axios
           .get("http://localhost:8000/api/v1/auth/users")
           .then((usersResponse) => {

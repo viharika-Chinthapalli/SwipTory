@@ -26,7 +26,6 @@ const BookmarksPage = () => {
       const bookmarkedStoryIds = response.data.bookmarkedStories;
 
       if (bookmarkedStoryIds.length === 0) {
-        // If bookmarkedStoryIds is empty, set stories to an empty array
         setStories([]);
       } else {
         const storiesData = await Promise.all(
@@ -63,7 +62,7 @@ const BookmarksPage = () => {
       )}
 
       <h2>Your Bookmarks</h2>
-      {stories.length === 0 ? ( // Check if stories array is empty
+      {stories.length === 0 ? ( 
         <p>No bookmarks yet</p>
       ) : (
         <div className={styles.cards}>

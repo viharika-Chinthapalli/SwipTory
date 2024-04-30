@@ -12,7 +12,7 @@ const Card = ({ image, title, onClick }) => {
       </div>
     </div>
   );
-};
+}; 
 
 Card.propTypes = {
   title: PropTypes.string.isRequired,

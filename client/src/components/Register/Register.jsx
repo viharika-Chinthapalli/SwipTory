@@ -30,24 +30,31 @@ const Register = ({ setShowRegister }) => {
 
     const userData = {
       username: username,
-      password: password
+      password: password,
     };
 
-    // Send POST request to the backend using Axios
-    axios.post("http://localhost:8000/api/v1/auth/register", userData)
-      .then(response => {
-        localStorage.setItem("token", response.data.token);
-        toast.success("Registration successful!");
-        setUsername("");
-        setPassword("");
-        setTimeout(() => {
-          setShowRegister(false);
-        }, 2000);
-      })
-      .catch(error => { 
-        console.error("Error during registration:", error);
-        toast.error("Error during registration. Please try again later.");
-      });
+    axios
+    .post("http://localhost:8000/api/v1/auth/register", userData)
+    .then((response) => {
+      localStorage.setItem("token", response.data.token);
+      toast.success("Registration successful!");
+      setUsername("");
+      setPassword("");
+
+      // Store userId only after successful registration
+      const userId = response.data.userId; // Assuming your backend returns userId
+      localStorage.setItem("username", username);
+
+      localStorage.setItem("userId", userId);
+
+      setTimeout(() => {
+        setShowRegister(false);
+      }, 2000);
+    })
+    .catch((error) => {
+      console.error("Error during registration:", error);
+      toast.error(error.response.data.errorMessage);
+    });
   };
 
   return (
@@ -85,10 +92,23 @@ const Register = ({ setShowRegister }) => {
         </div>
         {error && <p className={styles.error}>{error}</p>}
 
-        <Button name={'Register'} color={'#73ABFF'} handleClick={handleRegister} />
-
+        <Button
+          name={"Register"}
+          color={"#73ABFF"}
+          handleClick={handleRegister}
+        />
       </div>
-      <ToastContainer position="top-right" autoClose={2000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover />
+      <ToastContainer
+        position="top-right"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </div>
   );
 };

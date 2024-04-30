@@ -8,6 +8,7 @@ import Navbar from "./components/Navbar/Navbar";
 import { ClickedCardProvider } from "./context/ClickedCardContext";
 import { EditCardProvider } from "./context/EditCardContext";
 import { UserIDProvider } from "./context/UserIdContext";
+import ShareStory from "./components/ShareStory/ShareStory";
 function App() {
   return (
     <UserIDProvider>
@@ -19,6 +20,13 @@ function App() {
             <Routes>
               <Route path="/" element={<HomePage />} />{" "}
               <Route path="/bookmarks" element={<BookmarksPage />} />{" "}
+              <Route path="/view-story/:storyID" element={<ShareStory />} />{" "}
+            </Routes>
+          </BrowserRouter>
+          <BrowserRouter>
+            <ToastContainer />
+            <Routes>
+              <Route path="/view-story/:storyID" element={<ShareStory />} />{" "}
             </Routes>
           </BrowserRouter>
         </EditCardProvider>
