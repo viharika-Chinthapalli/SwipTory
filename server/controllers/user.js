@@ -32,14 +32,16 @@ const registerUser = async (req, res) => {
       { expiresIn: "24h" }
     );
 
-    // Include userId in the response
-    res.json({ message: "User registered successfully", token: token, userId: userData._id });
+    res.json({
+      message: "User registered successfully",
+      token: token,
+      userId: userData._id,
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json({ errorMessage: "Something went wrong!" });
   }
 };
-
 
 const loginUser = async (req, res) => {
   try {
@@ -83,7 +85,7 @@ const loginUser = async (req, res) => {
 
 const getAllUsers = async (req, res) => {
   try {
-    const users = await User.find({}, { password: 0 }); // Exclude password field from the response
+    const users = await User.find({}, { password: 0 });
     res.json(users);
   } catch (error) {
     console.error(error);

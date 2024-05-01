@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import PropTypes from "prop-types";
 import styles from "./Register.module.css";
 import Button from "../Button/Button";
 
@@ -34,27 +35,26 @@ const Register = ({ setShowRegister }) => {
     };
 
     axios
-    .post(`${import.meta.env.REACT_APP_BACKEND_URL}/auth/register`, userData)
-    .then((response) => {
-      localStorage.setItem("token", response.data.token);
-      toast.success("Registration successful!");
-      setUsername("");
-      setPassword("");
+      .post(`${import.meta.env.REACT_APP_BACKEND_URL}/auth/register`, userData)
+      .then((response) => {
+        localStorage.setItem("token", response.data.token);
+        toast.success("Registration successful!");
+        setUsername("");
+        setPassword("");
 
-      // Store userId only after successful registration
-      const userId = response.data.userId; // Assuming your backend returns userId
-      localStorage.setItem("username", username);
+        const userId = response.data.userId;
+        localStorage.setItem("username", username);
 
-      localStorage.setItem("userId", userId);
+        localStorage.setItem("userId", userId);
 
-      setTimeout(() => {
-        setShowRegister(false);
-      }, 2000);
-    })
-    .catch((error) => {
-      console.error("Error during registration:", error);
-      toast.error(error.response.data.errorMessage);
-    });
+        setTimeout(() => {
+          setShowRegister(false);
+        }, 2000);
+      })
+      .catch((error) => {
+        console.error("Error during registration:", error);
+        toast.error(error.response.data.errorMessage);
+      });
   };
 
   return (
@@ -111,6 +111,10 @@ const Register = ({ setShowRegister }) => {
       />
     </div>
   );
+};
+
+Register.propTypes = {
+  setShowRegister: PropTypes.func,
 };
 
 export default Register;

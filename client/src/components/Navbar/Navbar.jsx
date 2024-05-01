@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import styles from "./Navbar.module.css";
 import Button from "../Button/Button";
 import RegisterPage from "../../pages/RegisterPage";
@@ -16,7 +16,7 @@ const Navbar = () => {
   const [showLogin, setShowLogin] = useState(false);
   const [showAddStory, setShowAddStory] = useState(false);
   const [showLogout, setShowLogout] = useState(false);
-  const { clickedEditId, setClickedEditId } = useEditCardID();
+  const { clickedEditId } = useEditCardID();
   const [showMenu, setShowMenu] = useState(false);
 
   const navigate = useNavigate();

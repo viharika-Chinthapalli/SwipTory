@@ -1,11 +1,12 @@
-import PropTypes from 'prop-types';
-import styles from './StoryCard.module.css';
+import PropTypes from "prop-types";
+import styles from "./StoryCard.module.css";
 
-const defaultImage = 'https://cdn.pixabay.com/photo/2023/05/19/05/33/boats-8003723_1280.jpg';
+const defaultImage =
+  "https://cdn.pixabay.com/photo/2023/05/19/05/33/boats-8003723_1280.jpg";
 
 const StoryCard = ({ story, onClick }) => {
   const backgroundImage = story.img ? `url(${story.img})` : defaultImage;
-  
+
   const handleCardClick = () => {
     onClick(story._id);
   };
@@ -21,16 +22,17 @@ const StoryCard = ({ story, onClick }) => {
         <h6 className={styles.paragraph}>{story.description}</h6>
       </div>
     </div>
-  ); 
+  );
 };
 
 StoryCard.propTypes = {
   story: PropTypes.shape({
     img: PropTypes.string,
     header: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired
+    description: PropTypes.string.isRequired,
+    _id: PropTypes.string.isRequired,
   }).isRequired,
-  onClick: PropTypes.func.isRequired, // onClick prop is a function
+  onClick: PropTypes.func.isRequired,
 };
 
 export default StoryCard;

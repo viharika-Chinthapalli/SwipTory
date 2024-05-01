@@ -1,5 +1,5 @@
-import React, { createContext, useState, useContext } from "react";
-
+import { createContext, useState, useContext } from "react";
+import PropTypes from "prop-types";
 const EditCardContext = createContext();
 
 export const EditCardProvider = ({ children }) => {
@@ -10,6 +10,10 @@ export const EditCardProvider = ({ children }) => {
       {children}
     </EditCardContext.Provider>
   );
+};
+
+EditCardProvider.propTypes = {
+  children: PropTypes.node.isRequired,
 };
 
 export const useEditCardID = () => useContext(EditCardContext);

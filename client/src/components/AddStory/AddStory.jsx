@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
+import PropTypes from "prop-types";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import styles from "../Register/Register.module.css";
@@ -8,11 +9,9 @@ import Button from "../Button/Button";
 import Slide from "../Slide/Slide";
 import slides from "../Slide/Slide.module.css";
 import { useEditCardID } from "../../context/EditCardContext";
-import { useUserID } from "../../context/UserIdContext";
 
 const AddStory = ({ setShowAddStory }) => {
-  const { userID, setUserId } = useUserID();
-  const userId = userID;
+  const userId = localStorage.getItem("userId");
   const { clickedEditId, setClickedEditId } = useEditCardID();
 
   const [slidesData, setSlidesData] = useState([
@@ -27,15 +26,12 @@ const AddStory = ({ setShowAddStory }) => {
     document.getElementById("slidesContainer").scrollTop = 9999;
   }, [slidesData]);
 
-  console.log(import.meta.env.REACT_APP_BACKEND_URL);
-
   useEffect(() => {
     const fetchStoryDetails = async () => {
       try {
-        console.log(clickedEditId);
         const response = await axios.get(
           `${import.meta.env.REACT_APP_BACKEND_URL}/story/${clickedEditId}`
-        ); 
+        );
         const storyDetails = response.data;
         setEditingStory(storyDetails);
         setSlidesData([
@@ -58,7 +54,6 @@ const AddStory = ({ setShowAddStory }) => {
   }, []);
 
   const handleClose = () => {
-    console.log("clicked close")
     setShowAddStory(false);
     setClickedEditId(false);
   };
@@ -86,7 +81,6 @@ const AddStory = ({ setShowAddStory }) => {
   const handleAddSlide = () => {
     if (slidesData.length < 6) {
       const newSlideId = slidesData.length + 1;
-      // Get the category from the current slide
       const currentCategory = slidesData[currentSlide - 1].category;
       setSlidesData([
         ...slidesData,
@@ -98,7 +92,7 @@ const AddStory = ({ setShowAddStory }) => {
           category: currentCategory,
         },
       ]);
-      setCurrentSlide(newSlideId); // Set the current slide to the newly added slide
+      setCurrentSlide(newSlideId);
     } else {
       toast.error("Maximum 6 slides allowed");
     }
@@ -121,16 +115,18 @@ const AddStory = ({ setShowAddStory }) => {
         description: editedSlide.description,
         type: editedSlide.category.toLowerCase(),
       };
-        axios.patch(
-          `${import.meta.env.REACT_APP_BACKEND_URL}/story/users/${userId}/${clickedEditId}`, patchData
+      axios
+        .patch(
+          `${
+            import.meta.env.REACT_APP_BACKEND_URL
+          }/story/users/${userId}/${clickedEditId}`,
+          patchData
         )
         .then((response) => {
           setClickedEditId(null);
-          console.log("Slide updated:", response.data);
           toast.success("Slide updated successfully!");
         })
         .catch((error) => {
-          console.error("Error updating slide:", error);
           toast.error("Error updating slide. Please try again later.");
         });
     } else {
@@ -155,16 +151,16 @@ const AddStory = ({ setShowAddStory }) => {
         };
         axios
           .post(
-            `${import.meta.env.REACT_APP_BACKEND_URL}/story/post-story/${userId}`,
+            `${
+              import.meta.env.REACT_APP_BACKEND_URL
+            }/story/post-story/${userId}`,
             postData
           )
           .then((response) => {
             setShowAddStory(false);
-            console.log("Slide posted:", response.data);
             toast.success("Slide posted successfully!");
           })
           .catch((error) => {
-            console.error("Error posting slide:", error);
             toast.error("Error posting slide. Please try again later.");
           });
       });
@@ -172,21 +168,17 @@ const AddStory = ({ setShowAddStory }) => {
   };
 
   const handleCloseSlide = (index) => {
-    console.log(index);
-    console.log(slidesData);
     const updatedData = slidesData.filter((slide) => slide.id !== index);
     const updatedSlides = updatedData.map((slide, i) => ({
       ...slide,
       id: i + 1,
     }));
-    console.log(updatedSlides);
     setSlidesData(updatedSlides);
     if (updatedSlides.length >= index) {
       setCurrentSlide(index);
     } else {
       setCurrentSlide(updatedSlides.length);
     }
-    console.log("close button");
   };
 
   return (
@@ -206,7 +198,7 @@ const AddStory = ({ setShowAddStory }) => {
                 onClose={() => handleCloseSlide(slide.id)}
                 showCloseButton={index >= 3}
                 isSelected={currentSlide === slide.id}
-                />
+              />
             ))}
 
             {slidesData.length < 6 && (
@@ -329,6 +321,10 @@ const AddStory = ({ setShowAddStory }) => {
       />
     </div>
   );
+};
+
+AddStory.propTypes = {
+  setShowAddStory: PropTypes.func,
 };
 
 export default AddStory;

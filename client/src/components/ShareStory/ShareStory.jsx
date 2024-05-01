@@ -1,30 +1,18 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./ShareStory.module.css";
 import axios from "axios";
-import leftArrow from "../../assets/left-arrow.png";
-import rightArrow from "../../assets/right-arrow.png";
-import bookmarkImg from "../../assets/bookmark.png";
-import TrueBookmark from "../../assets/trueBookmark.png";
-import heartImg from "../../assets/heart.png";
-import TrueHeart from "../../assets/trueHeart.png";
-import sendImg from "../../assets/send.png";
-import closeImg from "../../assets/close.png";
 
 const ShareStory = () => {
   const clickedID = localStorage.getItem("storyId");
   const [story, setStory] = useState({});
   const [stories, setStories] = useState([]);
-  const [currentStoryIndex, setCurrentStoryIndex] = useState(clickedID);
-  const userID = localStorage.getItem("userID");
 
-  console.log(clickedID);
   useEffect(() => {
     const fetchStoryById = async () => {
       if (clickedID) {
         const response = await axios.get(
           `${import.meta.env.REACT_APP_BACKEND_URL}/story/${clickedID}`
         );
-        console.log(story)
         setStory(response.data);
       }
     };
@@ -37,7 +25,6 @@ const ShareStory = () => {
         const response = await axios.get(
           `${import.meta.env.REACT_APP_BACKEND_URL}/story/get-stories`
         );
-        console.log(response)
         setStories(response.data.stories);
       } catch (error) {
         console.error("Error fetching stories:", error);

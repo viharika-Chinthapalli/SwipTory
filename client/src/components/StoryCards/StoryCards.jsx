@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import styles from "./StoryCards.module.css";
 import StoryCard from "../StoryCard/StoryCard";
@@ -11,25 +11,22 @@ import { useEditCardID } from "../../context/EditCardContext";
 
 const StoryCards = ({ category }) => {
   const [stories, setStories] = useState([]);
-  // const {setClickedCardId} = useClickedCard();
   const { clickedCardId, setClickedCardId } = useClickedCard();
   const { setClickedEditId } = useEditCardID();
 
   const [expandedCategories, setExpandedCategories] = useState([]);
   const [filteredStories, setFilteredStories] = useState([]);
   const [userStories, setUserStories] = useState([]);
-
-  const userId = localStorage.getItem("userId");
   localStorage.setItem("storyId", clickedCardId);
-  console.log(userStories)
-
 
   useEffect(() => {
     const fetchStories = async () => {
       try {
         let url = `${import.meta.env.REACT_APP_BACKEND_URL}/story/get-stories`;
         if (category && category !== "all") {
-          url = `${import.meta.env.REACT_APP_BACKEND_URL}/story/stories?type=${category}`;
+          url = `${
+            import.meta.env.REACT_APP_BACKEND_URL
+          }/story/stories?type=${category}`;
         }
         const response = await axios.get(url);
         setStories(response.data.stories);
@@ -42,7 +39,9 @@ const StoryCards = ({ category }) => {
       try {
         const userId = localStorage.getItem("userId");
         const response = await axios.get(
-          `${import.meta.env.REACT_APP_BACKEND_URL}/story/get-userstories/${userId}`
+          `${
+            import.meta.env.REACT_APP_BACKEND_URL
+          }/story/get-userstories/${userId}`
         );
         setUserStories(response.data.userStories);
       } catch (error) {
@@ -55,7 +54,6 @@ const StoryCards = ({ category }) => {
   }, [category]);
 
   const handleCardClick = (id) => {
-    console.log("Clicked card ID:", id);
     const clickedStory = stories.find((story) => story._id === id);
     if (clickedStory) {
       const storiesToSend = stories.filter(
@@ -84,15 +82,16 @@ const StoryCards = ({ category }) => {
 
   const handleEdit = async (id) => {
     try {
-      console.log("clicked id", id);
       setClickedEditId(id);
-      const response = await axios.get(`${import.meta.env.REACT_APP_BACKEND_URL}/story/${id}`);
+      const response = await axios.get(
+        `${import.meta.env.REACT_APP_BACKEND_URL}/story/${id}`
+      );
       setFilteredStories([response.data.story]);
     } catch (error) {
       console.error("Error fetching story details:", error);
     }
   };
- 
+
   return (
     <div>
       {clickedCardId !== null && (
@@ -103,7 +102,7 @@ const StoryCards = ({ category }) => {
           )}
           onClose={handleCloseModal}
         />
-      )} 
+      )}
       {category === "all" && (
         <>
           {["medical", "fruits", "world", "india"].map((card) => (
@@ -162,20 +161,20 @@ const StoryCards = ({ category }) => {
             {stories.length > 0 ? (
               stories.map((story) => (
                 <div key={story._id} className={styles.cardContainer}>
-                    <StoryCard story={story} onClick={handleCardClick} />
+                  <StoryCard story={story} onClick={handleCardClick} />
                   {userStories.includes(story._id) && (
-                      <span className={styles.edit}>
-                        <img
-                          className={styles.editImage}
-                          src={edit}
-                          alt="edit image"
-                        />
-                        <Button
-                          name={"Edit"}
-                          color={"#FFFFFF"}
-                          handleClick={() => handleEdit()}
-                        />
-                      </span>
+                    <span className={styles.edit}>
+                      <img
+                        className={styles.editImage}
+                        src={edit}
+                        alt="edit image"
+                      />
+                      <Button
+                        name={"Edit"}
+                        color={"#FFFFFF"}
+                        handleClick={() => handleEdit()}
+                      />
+                    </span>
                   )}
                 </div>
               ))

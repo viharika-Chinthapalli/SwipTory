@@ -51,7 +51,7 @@ const ViewStory = ({ stories, currentIndex, onClose }) => {
         setBookmarkStatus(initialBookmarkStatus);
       } catch (error) {
         console.error("Error fetching initial bookmark status:", error);
-        toast.error("Failed to fetch initial bookmark status");
+        toast.error("Please Login to Like, Share and Bookmark");
       }
     };
 
@@ -79,9 +79,7 @@ const ViewStory = ({ stories, currentIndex, onClose }) => {
         setLikeStatus(updatedLikeStatus);
       } catch (error) {
         console.error("Error fetching initial bookmark status:", error);
-        toast.error("Failed to fetch initial bookmark status", {
-          position: toast.POSITION.BOTTOM_CENTER,
-        });
+        toast.error("Please Login to Like, Share and Bookmark");
       }
     };
 
@@ -94,10 +92,9 @@ const ViewStory = ({ stories, currentIndex, onClose }) => {
         const url = `${import.meta.env.REACT_APP_BACKEND_URL}/story/${storyId}`;
         const response = await axios.get(url);
         setLikes(response.data.likeCount);
-        console.log(response.data.likeCount);
       } catch (error) {
         console.error(`Error fetching likes for story ${storyId}:`, error);
-        setLikes(0); // Set likes to 0 if there's an error fetching likes
+        setLikes(0);
       }
     };
 
@@ -122,8 +119,10 @@ const ViewStory = ({ stories, currentIndex, onClose }) => {
 
   const handleShare = () => {
     const story = stories[currentStoryIndex];
-    const storyLink = `${import.meta.env.REACT_APP_STORY_URL}/view-story/${story._id}`;
-    
+    const storyLink = `${import.meta.env.REACT_APP_STORY_URL}/view-story/${
+      story._id
+    }`;
+
     navigator.clipboard.writeText(storyLink);
 
     toast.success("Link copied to clipboard!");
@@ -162,18 +161,15 @@ const ViewStory = ({ stories, currentIndex, onClose }) => {
 
     try {
       const response = await axios.post(
-        `${import.meta.env.REACT_APP_BACKEND_URL}/like-story/like/${userId}/${storyId}`
+        `${
+          import.meta.env.REACT_APP_BACKEND_URL
+        }/like-story/like/${userId}/${storyId}`
       );
       const updatedLikeStatus = { ...likeStatus };
-      const likedStoryIds = response.data.like.likedStories;
-
       updatedLikeStatus[storyId] = !updatedLikeStatus[storyId];
-
       const likeCountChange = updatedLikeStatus[storyId] ? 1 : -1;
       setLikes(likes + likeCountChange);
-
       setLikeStatus(updatedLikeStatus);
-
       toast.success("Like status toggled successfully");
     } catch (error) {
       console.error("Error toggling like status:", error);

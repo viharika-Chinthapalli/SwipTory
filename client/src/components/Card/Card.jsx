@@ -1,5 +1,5 @@
-import PropTypes from 'prop-types';
-import styles from './Card.module.css';
+import PropTypes from "prop-types";
+import styles from "./Card.module.css";
 
 const Card = ({ image, title, onClick }) => {
   return (
@@ -12,7 +12,7 @@ const Card = ({ image, title, onClick }) => {
       </div>
     </div>
   );
-}; 
+};
 
 Card.propTypes = {
   title: PropTypes.string.isRequired,

@@ -1,5 +1,6 @@
-import React from 'react'
 import Register from '../components/Register/Register'
+import PropTypes from 'prop-types';
+
 const RegisterPage = ({setShowRegister}) => {
   return (
     <div>
@@ -7,5 +8,9 @@ const RegisterPage = ({setShowRegister}) => {
     </div>
   )
 }
+
+RegisterPage.propTypes = {
+  setShowRegister: PropTypes.func.isRequired
+};
 
 export default RegisterPage

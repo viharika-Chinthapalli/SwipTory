@@ -26,26 +26,24 @@ const getStoryById = async (req, res) => {
   try {
     const story = await Story.findById(id);
     if (!story) {
-      return res.status(404).json({ error: 'Story not found' });
+      return res.status(404).json({ error: "Story not found" });
     }
     res.json(story);
   } catch (error) {
-    console.error('Error fetching story bookmark status:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error("Error fetching story bookmark status:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 
 const viewStory = async (req, res) => {
   const { storyId } = req.params;
-  // Here you can construct the link using the storyId
   const shareLink = `http://localhost:5173/view-story/${storyId}`;
-  res.json({ shareLink }); // Sending the constructed link as response
+  res.json({ shareLink });
 };
-
 
 module.exports = {
   getAllStories,
   getStoriesBasedOnType,
   getStoryById,
-  viewStory
+  viewStory,
 };

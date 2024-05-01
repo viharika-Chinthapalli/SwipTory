@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import StoryCard from "../../components/StoryCard/StoryCard";
 import styles from "./BookmarksPage.module.css";
@@ -7,9 +7,8 @@ import ViewStory from "../../components/ViewStory/ViewStory";
 const BookmarksPage = () => {
   const [stories, setStories] = useState([]);
   const [clickedCardId, setClickedCardId] = useState(null);
-
+  localStorage.setItem("storyId", clickedCardId);
   const handleCardClick = (id) => {
-    console.log("Clicked card ID:", id);
     setClickedCardId(id);
   };
 
@@ -38,8 +37,6 @@ const BookmarksPage = () => {
         );
         setStories(storiesData);
       }
-
-      console.log(response);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -62,8 +59,8 @@ const BookmarksPage = () => {
       )}
 
       <h2>Your Bookmarks</h2>
-      {stories.length === 0 ? ( 
-        <p>No bookmarks yet</p>
+      {stories.length === 0 ? (
+        <p className={styles.bookmarks}>No bookmarks yet</p>
       ) : (
         <div className={styles.cards}>
           {stories.map((story) => (

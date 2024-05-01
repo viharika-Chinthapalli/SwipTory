@@ -1,13 +1,12 @@
-.container{
+.container {
   display: flex;
   margin-left: 3%;
-  /* flex-wrap: wrap; */
   overflow-x: auto;
   max-width: 100%;
 }
 
 @media screen and (max-width: 600px) {
-  .container{
+  .container {
     margin-left: 0%;
   }
 }

@@ -3,8 +3,8 @@ const Story = require("../models/stories");
 
 const bookmarkStory = async (req, res) => {
   try {
-    const userId = req.params.userId; // Retrieve userId from request parameters
-    const storyId = req.params.storyId; // Retrieve storyId from request parameters
+    const userId = req.params.userId;
+    const storyId = req.params.storyId;
     const story = await Story.findById(storyId);
     if (!story) {
       return res.status(404).json({ errorMessage: "Story not found" });
@@ -38,10 +38,9 @@ const bookmarkStory = async (req, res) => {
 
 const getUserBookmarks = async (req, res) => {
   try {
-    const userId = req.params.userId; // Retrieve userId from request parameters
+    const userId = req.params.userId;
     const bookmarks = await Bookmark.findOne({ userId });
     if (!bookmarks) {
-      // If no bookmarks found, return an empty array with userId
       return res.json({ userId, bookmarks: [] });
     }
     res.json(bookmarks);

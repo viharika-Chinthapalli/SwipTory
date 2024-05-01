@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import PropTypes from "prop-types";
 import styles from "./Slide.module.css";
 
 const Slide = ({ number, onClick, onClose, showCloseButton, isSelected }) => {
@@ -12,11 +12,17 @@ const Slide = ({ number, onClick, onClose, showCloseButton, isSelected }) => {
           &times;
         </button>
       )}
-      <div className={styles.slideContent}>
-        Slide {number}
-      </div>
+      <div className={styles.slideContent}>Slide {number}</div>
     </div>
   );
+};
+
+Slide.propTypes = {
+  number: PropTypes.number.isRequired,
+  onClick: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired,
+  showCloseButton: PropTypes.bool.isRequired,
+  isSelected: PropTypes.bool.isRequired,
 };
 
 export default Slide;

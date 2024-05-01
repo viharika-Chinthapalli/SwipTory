@@ -4,9 +4,9 @@ const UserStoriesSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
-    required: true
+    required: true,
   },
-  userStories: [{}]
+  userStories: [{}],
 });
 
 module.exports = mongoose.model("UserStory", UserStoriesSchema);

@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import axios from "axios";
+import PropTypes from "prop-types";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import styles from "../Register/Register.module.css";
@@ -44,7 +45,6 @@ const Login = ({ setShowLogin }) => {
           .get(`${import.meta.env.REACT_APP_BACKEND_URL}/auth/users`)
           .then((usersResponse) => {
             const users = usersResponse.data;
-            console.log(users);
             const foundUser = users.find(
               (user) => user.username === response.data.username
             );
@@ -63,7 +63,6 @@ const Login = ({ setShowLogin }) => {
         setTimeout(() => {
           setShowLogin(false);
         }, 2000);
-        console.log(response.data);
         return response.data.username;
       })
       .catch((error) => {
@@ -121,6 +120,10 @@ const Login = ({ setShowLogin }) => {
       />
     </div>
   );
+};
+
+Login.propTypes = {
+  setShowLogin: PropTypes.func,
 };
 
 export default Login;

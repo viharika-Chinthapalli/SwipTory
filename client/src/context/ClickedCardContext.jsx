@@ -1,17 +1,19 @@
-import React, { createContext, useState, useContext, useEffect } from "react";
-
+import { createContext, useState, useContext, useEffect } from "react";
+import PropTypes from "prop-types";
 const ClickedCardContext = createContext();
 
 export const ClickedCardProvider = ({ children }) => {
   const [clickedCardId, setClickedCardId] = useState(null);
-  useEffect(() => {
-    console.log(clickedCardId);
-  }, [clickedCardId])
+  useEffect(() => {}, [clickedCardId]);
   return (
     <ClickedCardContext.Provider value={{ clickedCardId, setClickedCardId }}>
       {children}
     </ClickedCardContext.Provider>
   );
+};
+
+ClickedCardProvider.propTypes = {
+  children: PropTypes.node.isRequired,
 };
 
 export const useClickedCard = () => useContext(ClickedCardContext);

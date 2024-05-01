@@ -23,22 +23,20 @@ const likeStory = async (req, res) => {
       );
 
       if (isLiked) {
-        // Unlike the story
         like.likedStories = like.likedStories.filter(
           (liked) => liked.toString() !== storyId
         );
         if (story.likeCount > 0) {
-          story.likeCount -= 1; // Decrement like count
+          story.likeCount -= 1;
         }
       } else {
-        // Like the story
         like.likedStories.push(storyId);
-        story.likeCount += 1; // Increment like count
+        story.likeCount += 1;
       }
     }
 
     await like.save();
-    await story.save(); // Save the updated story
+    await story.save();
 
     res.json({ message: "Like status toggled successfully", like });
   } catch (error) {
@@ -52,7 +50,6 @@ const getUserLikes = async (req, res) => {
     const userId = req.params.userId;
     const likes = await Like.findOne({ userId });
     if (!likes) {
-      // If no likes found, return an empty array with userId
       return res.json({ userId, likes: [] });
     }
     res.json(likes);
